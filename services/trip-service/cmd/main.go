@@ -5,7 +5,6 @@ import (
 	"ride-sharing/services/trip-service/internal/domain"
 	"ride-sharing/services/trip-service/internal/infrastructure/repository"
 	"ride-sharing/services/trip-service/internal/service"
-	"time"
 )
 
 func main() {
@@ -13,7 +12,7 @@ func main() {
 	inmemRepo := repository.NewInmemRepository()
 	svc := service.NewService(inmemRepo)
 	fare := &domain.RideFareModel{
-		UserID: "user123",
+		UserID: "user123s",
 	}
 
 	t, err := svc.CreateTrip(ctx, fare)
