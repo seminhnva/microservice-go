@@ -1,9 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
-	"ride-sharing/shared/contracts"
 	"ride-sharing/shared/types"
 )
 
@@ -25,10 +25,25 @@ func handleTripPreview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := contracts.APIResponse{
-		Data: "Hello from API Gateway",
+	jsonBody, _ := json.Marshal(req)
+	reader := bytes.NewReader(jsonBody)
+
+	// call trip
+
+	res, err := http.Post("http://trip-service:8083/preview", "application/json", reader)
+	if err != nil {
+		http.Error(w, "Failed to create request to trip service", http.StatusInternalServerError)
+		return
 	}
-	writeJsonResponse(w, http.StatusOK, response)
+	defer res.Body.Close()
+
+	var resBody any
+	if err := json.NewDecoder(res.Body).Decode(&resBody); err != nil {
+		http.Error(w, "Failed to decode response from trip service", http.StatusInternalServerError)
+		return
+	}
+
+	writeJsonResponse(w, res.StatusCode, resBody)
 }
 
 func writeJsonResponse(w http.ResponseWriter, statusCode int, data any) error {
