@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"ride-sharing/shared/types"
+	"time"
 )
 
 type previewTripRequest struct {
@@ -14,6 +15,7 @@ type previewTripRequest struct {
 }
 
 func handleTripPreview(w http.ResponseWriter, r *http.Request) {
+	time.Sleep(time.Second * 9)
 	var req previewTripRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
