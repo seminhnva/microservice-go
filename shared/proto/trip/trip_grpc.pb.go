@@ -8,7 +8,6 @@ package trip
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -27,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TripServiceClient interface {
-	PreviewTrip(ctx context.Context, in *PreviewRequest, opts ...grpc.CallOption) (*PreviewResponse, error)
+	PreviewTrip(ctx context.Context, in *PreviewTripRequest, opts ...grpc.CallOption) (*PreviewTripResponse, error)
 }
 
 type tripServiceClient struct {
@@ -38,9 +37,9 @@ func NewTripServiceClient(cc grpc.ClientConnInterface) TripServiceClient {
 	return &tripServiceClient{cc}
 }
 
-func (c *tripServiceClient) PreviewTrip(ctx context.Context, in *PreviewRequest, opts ...grpc.CallOption) (*PreviewResponse, error) {
+func (c *tripServiceClient) PreviewTrip(ctx context.Context, in *PreviewTripRequest, opts ...grpc.CallOption) (*PreviewTripResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PreviewResponse)
+	out := new(PreviewTripResponse)
 	err := c.cc.Invoke(ctx, TripService_PreviewTrip_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -52,7 +51,7 @@ func (c *tripServiceClient) PreviewTrip(ctx context.Context, in *PreviewRequest,
 // All implementations must embed UnimplementedTripServiceServer
 // for forward compatibility.
 type TripServiceServer interface {
-	PreviewTrip(context.Context, *PreviewRequest) (*PreviewResponse, error)
+	PreviewTrip(context.Context, *PreviewTripRequest) (*PreviewTripResponse, error)
 	mustEmbedUnimplementedTripServiceServer()
 }
 
@@ -63,7 +62,7 @@ type TripServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedTripServiceServer struct{}
 
-func (UnimplementedTripServiceServer) PreviewTrip(context.Context, *PreviewRequest) (*PreviewResponse, error) {
+func (UnimplementedTripServiceServer) PreviewTrip(context.Context, *PreviewTripRequest) (*PreviewTripResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method PreviewTrip not implemented")
 }
 func (UnimplementedTripServiceServer) mustEmbedUnimplementedTripServiceServer() {}
@@ -88,7 +87,7 @@ func RegisterTripServiceServer(s grpc.ServiceRegistrar, srv TripServiceServer) {
 }
 
 func _TripService_PreviewTrip_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PreviewRequest)
+	in := new(PreviewTripRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -100,7 +99,7 @@ func _TripService_PreviewTrip_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: TripService_PreviewTrip_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TripServiceServer).PreviewTrip(ctx, req.(*PreviewRequest))
+		return srv.(TripServiceServer).PreviewTrip(ctx, req.(*PreviewTripRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -5,21 +5,21 @@ package trip;
 option go_package ="shared/proto/trip;trip";
 
 service TripService{
-  rpc PreviewTrip(PreviewRequest) returns (PreviewResponse);
+  rpc PreviewTrip(PreviewTripRequest) returns (PreviewTripResponse);
 }
 
-message PreviewRequest{
-  string     userId        = 1;
+message PreviewTripRequest{
+  string     userID        = 1;
   Coordinate startLocation = 2;
   Coordinate endLocation   = 3;
 }
 
 message Coordinate {
   double latitude   = 1;
-  double longtitude = 2;
+  double longitude = 2;
 }
 
-message PreviewResponse{
+message PreviewTripResponse{
   string   tripID   = 1;
   Route    route    = 2 ;
  repeated RideFare rideFaress = 3;
