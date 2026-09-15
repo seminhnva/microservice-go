@@ -137,7 +137,7 @@ type PreviewTripResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TripID        string                 `protobuf:"bytes,1,opt,name=tripID,proto3" json:"tripID,omitempty"`
 	Route         *Route                 `protobuf:"bytes,2,opt,name=route,proto3" json:"route,omitempty"`
-	RideFaress    []*RideFare            `protobuf:"bytes,3,rep,name=rideFaress,proto3" json:"rideFaress,omitempty"`
+	RideFares     []*RideFare            `protobuf:"bytes,3,rep,name=rideFares,proto3" json:"rideFares,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -186,9 +186,9 @@ func (x *PreviewTripResponse) GetRoute() *Route {
 	return nil
 }
 
-func (x *PreviewTripResponse) GetRideFaress() []*RideFare {
+func (x *PreviewTripResponse) GetRideFares() []*RideFare {
 	if x != nil {
-		return x.RideFaress
+		return x.RideFares
 	}
 	return nil
 }
@@ -474,13 +474,11 @@ const file_trip_proto_rawDesc = "" +
 	"\n" +
 	"Coordinate\x12\x1a\n" +
 	"\blatitude\x18\x01 \x01(\x01R\blatitude\x12\x1c\n" +
-	"\tlongitude\x18\x02 \x01(\x01R\tlongitude\"\x80\x01\n" +
+	"\tlongitude\x18\x02 \x01(\x01R\tlongitude\"~\n" +
 	"\x13PreviewTripResponse\x12\x16\n" +
 	"\x06tripID\x18\x01 \x01(\tR\x06tripID\x12!\n" +
-	"\x05route\x18\x02 \x01(\v2\v.trip.RouteR\x05route\x12.\n" +
-	"\n" +
-	"rideFaress\x18\x03 \x03(\v2\x0e.trip.RideFareR\n" +
-	"rideFaress\"k\n" +
+	"\x05route\x18\x02 \x01(\v2\v.trip.RouteR\x05route\x12,\n" +
+	"\trideFares\x18\x03 \x03(\v2\x0e.trip.RideFareR\trideFares\"k\n" +
 	"\x05Route\x12*\n" +
 	"\bgeometry\x18\x01 \x03(\v2\x0e.trip.GeometryR\bgeometry\x12\x1a\n" +
 	"\bdistance\x18\x02 \x01(\x01R\bdistance\x12\x1a\n" +
@@ -531,7 +529,7 @@ var file_trip_proto_depIdxs = []int32{
 	1, // 0: trip.PreviewTripRequest.startLocation:type_name -> trip.Coordinate
 	1, // 1: trip.PreviewTripRequest.endLocation:type_name -> trip.Coordinate
 	3, // 2: trip.PreviewTripResponse.route:type_name -> trip.Route
-	5, // 3: trip.PreviewTripResponse.rideFaress:type_name -> trip.RideFare
+	5, // 3: trip.PreviewTripResponse.rideFares:type_name -> trip.RideFare
 	4, // 4: trip.Route.geometry:type_name -> trip.Geometry
 	1, // 5: trip.Geometry.coordinates:type_name -> trip.Coordinate
 	0, // 6: trip.TripService.PreviewTrip:input_type -> trip.PreviewTripRequest
