@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"ride-sharing/services/trip-service/internal/domain"
+	"ride-sharing/shared/proto/trip"
 	"ride-sharing/shared/types"
 
 	tripTypes "ride-sharing/services/trip-service/pkg/types"
@@ -29,6 +30,7 @@ func (s *TripService) CreateTrip(ctx context.Context, fare *domain.RideFareModel
 		UserID:   fare.UserID,
 		Status:   "pending",
 		RideFare: fare,
+		Driver:   &trip.TripDriver{},
 	}
 	return s.repo.CreateTrip(ctx, trip)
 }
@@ -68,7 +70,7 @@ func (s *TripService) EstimatePackagesPriceWithRoute(route *tripTypes.OsrmApiRes
 	}
 	return estimateFare
 }
-func (s *TripService) GenerateTripFares(ctx context.Context, rideFares []*domain.RideFareModel, userID string) ([]*domain.RideFareModel, error) {
+func (s *TripService) GenerateTripFares(ctx context.Context, rideFares []*domain.RideFareModel, userID string, route *tripTypes.OsrmApiResponse) ([]*domain.RideFareModel, error) {
 	fares := make([]*domain.RideFareModel, len(rideFares))
 
 	for i, f := range rideFares {
@@ -78,6 +80,7 @@ func (s *TripService) GenerateTripFares(ctx context.Context, rideFares []*domain
 			ID:                id,
 			TotalPriceInCents: f.TotalPriceInCents,
 			PackageSlug:       f.PackageSlug,
+			Route:             route,
 		}
 		if err := s.repo.SaveRideFare(ctx, fare); err != nil {
 			return nil, fmt.Errorf("Failed to save trip fare: %w", err)
@@ -86,6 +89,21 @@ func (s *TripService) GenerateTripFares(ctx context.Context, rideFares []*domain
 	}
 	return fares, nil
 
+}
+func (s *TripService) GetAndValidateFare(ctx context.Context, fareID, userID string) (*domain.RideFareModel, error) {
+	fare, err := s.repo.GetRideFareById(ctx, fareID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get trip fare: %w", err)
+	}
+	if fare == nil {
+		return nil, fmt.Errorf("fares does not exist: %w", err)
+
+	}
+	//User fare validation(user is owner of this fare?)
+	if userID != fare.UserID {
+		return nil, fmt.Errorf("fares does not belong to the user: %w", err)
+	}
+	return fare, nil
 }
 func estimateFareRoute(f *domain.RideFareModel, route *tripTypes.OsrmApiResponse) *domain.RideFareModel {
 	pricingCfg := tripTypes.DefaultPricingConfig()
