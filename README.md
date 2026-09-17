@@ -101,8 +101,8 @@ It's advisable to first run the steps manually and then build a proper CI/CD flo
 
 ## 0. Environments
 ```bash
-REGION: europe-west1 # change according to your location
-PROJECT_ID: <your-gcp-project-id>
+REGION: asia-southeast1 # change according to your location
+PROJECT_ID: ride-share-508904
 ```
 
 ## 1. Add secrets.yaml file to the production folder
@@ -130,12 +130,11 @@ Go to Google Cloud > Artifact Registry and manually create a docker repository t
 
 
 ## 4. Push the Docker images to artifact registry
-
+docker push <region>-docker.pkg.dev/<project-id>/<repo>/api-gateway
 Docker push the images. 
-If you get errors pushing:
+If you get errors pushing: 
 1. Make sure to `gcloud login`, select the right project or even `gcloud init`.
 2. Configure artifact on your docker config `gcloud auth configure-docker {REGION}-docker.pkg.dev` [Docs](https://cloud.google.com/artifact-registry/docs/docker/pushing-and-pulling#cred-helper)
-
 
 ## 5. Create a Google Kubernetes Cluster
 You can either run a `gcloud` command to start a GKE cluster or manually create a cluster on the UI (recommended).
